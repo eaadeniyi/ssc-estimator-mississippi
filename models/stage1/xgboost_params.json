@@ -1,0 +1,37 @@
+{
+  "model_name": "xgboost",
+  "model_type": "sklearn",
+  "feature_columns": [
+    "blue",
+    "green",
+    "red",
+    "nir",
+    "ndvi",
+    "ndti",
+    "nsmi",
+    "ndssi",
+    "red-nir",
+    "sed.index",
+    "nir/red",
+    "nir/blue",
+    "nir/green",
+    "red/green",
+    "(r/g)+nir",
+    "red-squared",
+    "nir-squared",
+    "log(nir)/log(red)"
+  ],
+  "use_log_transform": false,
+  "metrics": {
+    "cv_r2_mean": 0.692374901639864,
+    "cv_r2_std": 0.12956508078522283,
+    "train_r2": 0.9999807149660027,
+    "train_rmse": 0.12309628605561551,
+    "train_mae": 0.08940761089324892,
+    "test_r2": 0.7292247191035557,
+    "test_rmse": 10.354999091694195,
+    "test_mae": 7.975234140668596,
+    "test_bias": 2.097816004071916
+  },
+  "timestamp": "2026-02-04T21:23:44.324958"
+}

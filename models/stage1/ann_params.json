@@ -1,0 +1,39 @@
+{
+  "model_name": "ann",
+  "model_type": "keras",
+  "feature_columns": [
+    "blue",
+    "green",
+    "red",
+    "nir",
+    "ndvi",
+    "ndti",
+    "nsmi",
+    "ndssi",
+    "red-nir",
+    "sed.index",
+    "nir/red",
+    "nir/blue",
+    "nir/green",
+    "red/green",
+    "(r/g)+nir",
+    "red-squared",
+    "nir-squared",
+    "log(nir)/log(red)"
+  ],
+  "use_log_transform": false,
+  "metrics": {
+    "cv_r2_mean": 0.36729183360531886,
+    "cv_r2_std": 0.29665255316467126,
+    "train_r2": 0.3185928429057753,
+    "train_rmse": 23.13865394849231,
+    "train_mae": 18.761349658455167,
+    "test_r2": -0.5058954819842592,
+    "test_rmse": 24.419848922162906,
+    "test_mae": 21.154947958673745,
+    "test_bias": -16.666520769255502,
+    "epochs_trained": 115,
+    "final_loss": 429.93817138671875
+  },
+  "timestamp": "2026-02-04T21:25:00.894333"
+}

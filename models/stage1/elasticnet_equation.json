@@ -1,0 +1,18 @@
+{
+  "equation_original_scale": "log10(Turbidity) = 0.485707 1.119181 * (r/g)+nir",
+  "is_log_transform": true,
+  "coefficients_original": {
+    "(r/g)+nir": 1.1191814791299726
+  },
+  "coefficients_scaled": {
+    "(r/g)+nir": 0.20699603118006626
+  },
+  "intercept_original": 0.4857072794897548,
+  "intercept_scaled": 1.6123395503015288,
+  "feature_means": {
+    "(r/g)+nir": 1.0066573579180327
+  },
+  "feature_stds": {
+    "(r/g)+nir": 0.18495305278012686
+  }
+}

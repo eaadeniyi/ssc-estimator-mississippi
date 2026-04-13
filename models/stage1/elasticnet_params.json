@@ -1,0 +1,20 @@
+{
+  "model_name": "elasticnet",
+  "model_type": "sklearn",
+  "feature_columns": [
+    "(r/g)+nir"
+  ],
+  "use_log_transform": true,
+  "metrics": {
+    "cv_r2_mean": 0.774443542526922,
+    "cv_r2_std": 0.12749212055641063,
+    "train_r2": 0.7531484399344662,
+    "train_rmse": 13.926843127821936,
+    "train_mae": 9.847450462308165,
+    "test_r2": 0.8080205122746419,
+    "test_rmse": 8.719126364626032,
+    "test_mae": 7.429547864763387,
+    "test_bias": 0.8269207268415893
+  },
+  "timestamp": "2026-02-04T21:23:40.740158"
+}

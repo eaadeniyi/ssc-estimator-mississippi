@@ -1,0 +1,20 @@
+{
+  "model_name": "ridge",
+  "model_type": "sklearn",
+  "feature_columns": [
+    "(r/g)+nir"
+  ],
+  "use_log_transform": true,
+  "metrics": {
+    "cv_r2_mean": 0.7762837512066376,
+    "cv_r2_std": 0.23090189611735115,
+    "train_r2": 0.7968728366636255,
+    "train_rmse": 12.633356377300071,
+    "train_mae": 8.641785037484127,
+    "test_r2": 0.8345088518247997,
+    "test_rmse": 8.095299896739041,
+    "test_mae": 7.241742895055808,
+    "test_bias": 2.51664232489205
+  },
+  "timestamp": "2026-02-04T21:23:40.680957"
+}

@@ -1,0 +1,37 @@
+{
+  "model_name": "random_forest",
+  "model_type": "sklearn",
+  "feature_columns": [
+    "blue",
+    "green",
+    "red",
+    "nir",
+    "ndvi",
+    "ndti",
+    "nsmi",
+    "ndssi",
+    "red-nir",
+    "sed.index",
+    "nir/red",
+    "nir/blue",
+    "nir/green",
+    "red/green",
+    "(r/g)+nir",
+    "red-squared",
+    "nir-squared",
+    "log(nir)/log(red)"
+  ],
+  "use_log_transform": false,
+  "metrics": {
+    "cv_r2_mean": 0.7333915936380924,
+    "cv_r2_std": 0.18055565058511744,
+    "train_r2": 0.9581948682219943,
+    "train_rmse": 5.731252520084236,
+    "train_mae": 4.304119711786233,
+    "test_r2": 0.814261367815837,
+    "test_rmse": 8.576235125764885,
+    "test_mae": 7.37696669629974,
+    "test_bias": 3.177954152494339
+  },
+  "timestamp": "2026-02-04T21:23:41.859992"
+}

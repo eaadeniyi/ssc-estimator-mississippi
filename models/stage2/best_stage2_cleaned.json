@@ -1,0 +1,108 @@
+{
+  "model_name": "Linear Log-Log (Power Law) - Cleaned",
+  "model_type": "linear_loglog",
+  "dataset": "cleaned_102",
+  "removed_samples": [
+    {
+      "date": "2022-03-03",
+      "turbidity": 194.0,
+      "ssc": 351,
+      "ssc_turb_ratio": 1.81,
+      "reason": "anomalously low SSC/Turb ratio"
+    },
+    {
+      "date": "2022-03-08",
+      "turbidity": 167.0,
+      "ssc": 281,
+      "ssc_turb_ratio": 1.68,
+      "reason": "anomalously low SSC/Turb ratio"
+    },
+    {
+      "date": "2017-01-25",
+      "turbidity": 107.3,
+      "ssc": 173,
+      "ssc_turb_ratio": 1.61,
+      "reason": "anomalously low SSC/Turb ratio"
+    },
+    {
+      "date": "2025-04-02",
+      "turbidity": 89.2,
+      "ssc": 146,
+      "ssc_turb_ratio": 1.64,
+      "reason": "anomalously low SSC/Turb ratio"
+    },
+    {
+      "date": "2024-04-24",
+      "turbidity": 113.7,
+      "ssc": 238,
+      "ssc_turb_ratio": 2.09,
+      "reason": "high residual at high turbidity"
+    }
+  ],
+  "a": 1.1092597259553072,
+  "b": 0.18351825115872455,
+  "power_law_coef": 1.5258725180176953,
+  "exponent": 1.1092597259553072,
+  "equation_log": "log10(SSC) = 1.1093 * log10(Turb) + 0.1835",
+  "equation_power": "SSC = 1.5259 * Turbidity^1.1093",
+  "smearing": {
+    "smearing_factor": 1.0307082164302637,
+    "ci_lower": 0.9716004586780991,
+    "ci_upper": 1.0846534412088205,
+    "residual_mean": 1.2061682242841206e-16,
+    "residual_std": 0.10594117897753104,
+    "n_samples": 81
+  },
+  "turb_train_min": 8.2,
+  "turb_train_max": 157.0,
+  "log_turb_train_min": 0.9138138523837167,
+  "log_turb_train_max": 2.1958996524092336,
+  "training_data": {
+    "n_total": 102,
+    "n_train": 81,
+    "n_test": 21,
+    "n_removed": 5,
+    "turb_min": 8.2,
+    "turb_max": 157.0,
+    "ssc_min": 8.0,
+    "ssc_max": 400.0
+  },
+  "metrics": {
+    "cv_r2_mean": 0.899791625454383,
+    "cv_r2_std": 0.035283198306331844,
+    "log_r2_train": 0.9072819697917591,
+    "log_r2_test": 0.9137852838077148,
+    "train_r2": 0.8990832145873572,
+    "train_rmse": 23.415478487650166,
+    "train_mae": 18.405982883577845,
+    "train_bias": 3.9641141248446297,
+    "test_r2": 0.9138712259886443,
+    "test_rmse": 18.933322256858578,
+    "test_mae": 13.393283971503127,
+    "test_bias": 2.97533068411123
+  },
+  "residual_tests": {
+    "shapiro_wilk_stat": 0.9220630830898522,
+    "shapiro_wilk_p": 0.0954259736042927,
+    "normality": "Normal"
+  },
+  "comparison_with_original": {
+    "original_n": 107,
+    "original_test_r2": 0.7127,
+    "original_test_rmse": 36.34,
+    "original_test_mae": 26.05,
+    "original_test_bias": 12.8,
+    "improvement_r2": 0.20117122598864434,
+    "improvement_rmse": -17.406677743141426,
+    "improvement_mae": -12.656716028496874,
+    "improvement_bias": -9.824669315888771
+  },
+  "config": {
+    "seed": 42,
+    "test_ratio": 0.2,
+    "split_mode": "random",
+    "cv_folds": 5
+  },
+  "timestamp": "2026-02-07T00:17:15.543977",
+  "version": "v5_cleaned"
+}

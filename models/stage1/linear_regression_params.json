@@ -1,0 +1,20 @@
+{
+  "model_name": "linear_regression",
+  "model_type": "sklearn",
+  "feature_columns": [
+    "(r/g)+nir"
+  ],
+  "use_log_transform": true,
+  "metrics": {
+    "cv_r2_mean": 0.7699377274386786,
+    "cv_r2_std": 0.2467119958484044,
+    "train_r2": 0.796748367442913,
+    "train_rmse": 12.637226423982852,
+    "train_mae": 8.66338409889744,
+    "test_r2": 0.8322222638396741,
+    "test_rmse": 8.151034337619057,
+    "test_mae": 7.244122648827981,
+    "test_bias": 2.719810766127023
+  },
+  "timestamp": "2026-02-04T21:23:40.614487"
+}

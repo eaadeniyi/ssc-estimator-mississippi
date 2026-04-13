@@ -1,0 +1,39 @@
+{
+  "model_name": "cnn_1d",
+  "model_type": "keras",
+  "feature_columns": [
+    "blue",
+    "green",
+    "red",
+    "nir",
+    "ndvi",
+    "ndti",
+    "nsmi",
+    "ndssi",
+    "red-nir",
+    "sed.index",
+    "nir/red",
+    "nir/blue",
+    "nir/green",
+    "red/green",
+    "(r/g)+nir",
+    "red-squared",
+    "nir-squared",
+    "log(nir)/log(red)"
+  ],
+  "use_log_transform": false,
+  "metrics": {
+    "cv_r2_mean": 0.2385452180274384,
+    "cv_r2_std": 0.3222843526663276,
+    "train_r2": 0.7849715131677895,
+    "train_rmse": 12.99818593096308,
+    "train_mae": 8.986783082144601,
+    "test_r2": 0.6825512558663274,
+    "test_rmse": 11.21198128750745,
+    "test_mae": 9.423208318437847,
+    "test_bias": -3.0985000337873188,
+    "epochs_trained": 197,
+    "final_loss": 216.9154815673828
+  },
+  "timestamp": "2026-02-04T21:26:15.249631"
+}

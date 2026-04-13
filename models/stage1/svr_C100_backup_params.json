@@ -1,0 +1,37 @@
+{
+  "model_name": "svr",
+  "model_type": "sklearn",
+  "feature_columns": [
+    "blue",
+    "green",
+    "red",
+    "nir",
+    "ndvi",
+    "ndti",
+    "nsmi",
+    "ndssi",
+    "red-nir",
+    "sed.index",
+    "nir/red",
+    "nir/blue",
+    "nir/green",
+    "red/green",
+    "(r/g)+nir",
+    "red-squared",
+    "nir-squared",
+    "log(nir)/log(red)"
+  ],
+  "use_log_transform": false,
+  "metrics": {
+    "cv_r2_mean": 0.7116213739989684,
+    "cv_r2_std": 0.09019257049865925,
+    "train_r2": 0.9224664160505506,
+    "train_rmse": 7.805121632126011,
+    "train_mae": 4.710159692594167,
+    "test_r2": 0.6531851699044825,
+    "test_rmse": 11.719103439819436,
+    "test_mae": 9.227840604588335,
+    "test_bias": 0.6692213434075026
+  },
+  "timestamp": "2026-02-04T21:23:40.776461"
+}

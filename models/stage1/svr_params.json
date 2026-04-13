@@ -1,0 +1,59 @@
+{
+  "model_name": "svr",
+  "model_type": "sklearn",
+  "feature_columns": [
+    "blue",
+    "green",
+    "red",
+    "nir",
+    "ndvi",
+    "ndti",
+    "nsmi",
+    "ndssi",
+    "red-nir",
+    "sed.index",
+    "nir/red",
+    "nir/blue",
+    "nir/green",
+    "red/green",
+    "(r/g)+nir",
+    "red-squared",
+    "nir-squared",
+    "log(nir)/log(red)"
+  ],
+  "use_log_transform": false,
+  "hyperparameters": {
+    "C": 100.0,
+    "epsilon": 0.5,
+    "gamma": "auto",
+    "kernel": "rbf"
+  },
+  "support_vectors": 54,
+  "n_train": 56,
+  "sv_ratio": 0.9642857142857143,
+  "metrics": {
+    "cv_r2_mean": 0.7324647309659499,
+    "cv_r2_std": 0.0783547617532268,
+    "train_r2": 0.9221163345696652,
+    "train_rmse": 7.822722721632087,
+    "train_mae": 4.854397292923666,
+    "test_r2": 0.6465089388974261,
+    "test_rmse": 11.831362902539327,
+    "test_mae": 9.208364244644814,
+    "test_bias": 0.9204743589980333
+  },
+  "old_C100_metrics": {
+    "cv_r2_mean": 0.7116213739989684,
+    "test_r2": 0.6531851699044825,
+    "train_r2": 0.9224664160505506,
+    "support_vectors": 55
+  },
+  "test_set_comparison": {
+    "ts1_turb_r2_old": 0.6531851699044825,
+    "ts1_turb_r2_new": 0.6465089388974261,
+    "ts2_ssc_r2_old": 0.8699179633890389,
+    "ts2_ssc_r2_new": 0.8809690980334796,
+    "ts3_turb_r2_old": 0.2799609662448692,
+    "ts3_turb_r2_new": 0.2930439921442105
+  }
+}
