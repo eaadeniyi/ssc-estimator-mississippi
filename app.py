@@ -4,6 +4,7 @@ Two-stage pipeline: Sentinel-2 Reflectance → Turbidity → SSC
 Models trained on ACOLITE-processed imagery (Belle Chasse, LA)
 """
 
+import os
 import json
 import warnings
 import numpy as np
@@ -13,27 +14,22 @@ import gradio as gr
 from pathlib import Path
 
 warnings.filterwarnings("ignore")
-
-# ── Try loading TensorFlow (optional — DL models only) ──
-try:
-    import tensorflow as tf
-    tf.get_logger().setLevel("ERROR")
-    HAS_TF = True
-except ImportError:
-    HAS_TF = False
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
 
 # ── Paths ──
-STAGE1_DIR = Path("models/stage1")
+STAGE1_DIR  = Path("models/stage1")
 STAGE2_JSON = Path("models/stage2/best_stage2_cleaned.json")
 
 # ── Stage 2 parameters ──
-s2 = json.loads(STAGE2_JSON.read_text())
+s2    = json.loads(STAGE2_JSON.read_text())
 S2_A  = s2["a"]
 S2_B  = s2["b"]
 S2_SF = s2["smearing"]["smearing_factor"]
 
 # ── Model definitions ──
 LOG_MODELS = {"linear_regression", "ridge", "elasticnet"}
+DL_MODELS  = {"ann", "cnn_1d"}
 ALL_MODELS = ["linear_regression", "ridge", "elasticnet",
               "svr", "random_forest", "xgboost", "ann", "cnn_1d"]
 DISPLAY = {
@@ -47,33 +43,25 @@ DISPLAY = {
     "cnn_1d":            "CNN 1D",
 }
 
-# ── Load all models at startup ──
+# ── Load sklearn/joblib models at startup (no TF yet) ──
 MODELS = {}
 for mn in ALL_MODELS:
+    if mn in DL_MODELS:
+        continue  # loaded lazily on first prediction
     try:
-        if mn in ("ann", "cnn_1d"):
-            if not HAS_TF:
-                continue
-            MODELS[mn] = {
-                "model":  tf.keras.models.load_model(STAGE1_DIR / f"{mn}_model.keras"),
-                "scaler": joblib.load(STAGE1_DIR / f"{mn}_scaler.joblib"),
-                "params": json.loads((STAGE1_DIR / f"{mn}_params.json").read_text()),
-            }
-        elif mn in LOG_MODELS:
-            MODELS[mn] = {
-                "model":    joblib.load(STAGE1_DIR / f"{mn}_model.joblib"),
-                "scaler":   joblib.load(STAGE1_DIR / f"{mn}_scaler.joblib"),
-                "params":   json.loads((STAGE1_DIR / f"{mn}_params.json").read_text()),
-                "smearing": json.loads((STAGE1_DIR / f"{mn}_smearing.json").read_text()),
-            }
-        else:
-            MODELS[mn] = {
-                "model":  joblib.load(STAGE1_DIR / f"{mn}_model.joblib"),
-                "scaler": joblib.load(STAGE1_DIR / f"{mn}_scaler.joblib"),
-                "params": json.loads((STAGE1_DIR / f"{mn}_params.json").read_text()),
-            }
+        entry = {
+            "model":  joblib.load(STAGE1_DIR / f"{mn}_model.joblib"),
+            "scaler": joblib.load(STAGE1_DIR / f"{mn}_scaler.joblib"),
+            "params": json.loads((STAGE1_DIR / f"{mn}_params.json").read_text()),
+        }
+        if mn in LOG_MODELS:
+            entry["smearing"] = json.loads((STAGE1_DIR / f"{mn}_smearing.json").read_text())
+        MODELS[mn] = entry
     except Exception as e:
         print(f"Could not load {mn}: {e}")
+
+# DL models loaded on first call to avoid TF polluting module namespace at startup
+_DL_CACHE = {}
 
 
 # ── Feature engineering ──
@@ -113,31 +101,40 @@ def predict_ssc(turb):
     return float((10 ** (S2_A * np.log10(max(turb, 0.1)) + S2_B)) * S2_SF)
 
 
+def _get_dl_model(mn):
+    """Load a Keras model on first use and cache it."""
+    if mn not in _DL_CACHE:
+        import tensorflow as tf
+        tf.get_logger().setLevel("ERROR")
+        _DL_CACHE[mn] = {
+            "model":  tf.keras.models.load_model(STAGE1_DIR / f"{mn}_model.keras"),
+            "scaler": joblib.load(STAGE1_DIR / f"{mn}_scaler.joblib"),
+        }
+    return _DL_CACHE[mn]
+
+
 def run_all_models(feature_dict):
-    """Run all loaded models on a single feature dict. Returns list of result rows."""
+    """Run all models on a single feature dict. Returns list of result rows."""
     X_all = np.array([[feature_dict[f] for f in FEATURE_ORDER]])
     results = []
 
     for mn in ALL_MODELS:
-        if mn not in MODELS:
-            results.append([DISPLAY[mn], "N/A (model not loaded)", "N/A"])
-            continue
         try:
-            m = MODELS[mn]
             if mn in LOG_MODELS:
+                m = MODELS[mn]
                 feat_col = m["params"]["feature_columns"]
                 X_feat = np.array([[feature_dict[f] for f in feat_col]])
-                X_sc = m["scaler"].transform(X_feat)
+                X_sc   = m["scaler"].transform(X_feat)
                 log_pred = m["model"].predict(X_sc)[0]
-                sf = m["smearing"]["smearing_factor"]
-                turb = float(max((10 ** log_pred) * sf, 0.1))
-            elif mn == "ann":
+                turb = float(max((10 ** log_pred) * m["smearing"]["smearing_factor"], 0.1))
+            elif mn in DL_MODELS:
+                m    = _get_dl_model(mn)
                 X_sc = m["scaler"].transform(X_all)
-                turb = float(max(m["model"].predict(X_sc, verbose=0).flatten()[0], 0.1))
-            elif mn == "cnn_1d":
-                X_sc = m["scaler"].transform(X_all).reshape(1, 18, 1)
+                if mn == "cnn_1d":
+                    X_sc = X_sc.reshape(1, 18, 1)
                 turb = float(max(m["model"].predict(X_sc, verbose=0).flatten()[0], 0.1))
             else:
+                m    = MODELS[mn]
                 X_sc = m["scaler"].transform(X_all)
                 turb = float(max(m["model"].predict(X_sc)[0], 0.1))
 
@@ -174,25 +171,23 @@ def predict_csv(file):
     for i, row in df.iterrows():
         feats = compute_features(row["blue"], row["green"], row["red"], row["nir"])
         for mn in ALL_MODELS:
-            if mn not in MODELS:
-                continue
-            m = MODELS[mn]
             try:
                 X_all = np.array([[feats[f] for f in FEATURE_ORDER]])
                 if mn in LOG_MODELS:
+                    m = MODELS[mn]
                     feat_col = m["params"]["feature_columns"]
                     X_feat = np.array([[feats[f] for f in feat_col]])
                     X_sc = m["scaler"].transform(X_feat)
                     log_pred = m["model"].predict(X_sc)[0]
-                    sf = m["smearing"]["smearing_factor"]
-                    turb = float(max((10 ** log_pred) * sf, 0.1))
-                elif mn == "ann":
+                    turb = float(max((10 ** log_pred) * m["smearing"]["smearing_factor"], 0.1))
+                elif mn in DL_MODELS:
+                    m = _get_dl_model(mn)
                     X_sc = m["scaler"].transform(X_all)
-                    turb = float(max(m["model"].predict(X_sc, verbose=0).flatten()[0], 0.1))
-                elif mn == "cnn_1d":
-                    X_sc = m["scaler"].transform(X_all).reshape(1, 18, 1)
+                    if mn == "cnn_1d":
+                        X_sc = X_sc.reshape(1, 18, 1)
                     turb = float(max(m["model"].predict(X_sc, verbose=0).flatten()[0], 0.1))
                 else:
+                    m = MODELS[mn]
                     X_sc = m["scaler"].transform(X_all)
                     turb = float(max(m["model"].predict(X_sc)[0], 0.1))
 
