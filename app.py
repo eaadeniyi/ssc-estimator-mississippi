@@ -69,10 +69,11 @@ def run_svr(blue, green, red, nir):
     turb = float(max(SVR_MODEL.predict(X_sc)[0], 0.1))
     ssc  = predict_ssc(turb)
 
-    # Extrapolation warning
-    warn = ""
     if turb < 9 or turb > 119:
-        warn = f"Warning: predicted turbidity ({turb:.1f} NTU) is outside training range (9–119 NTU). Interpret with caution."
+        warn = gr.update(visible=True,
+                         value=f"Warning: predicted turbidity ({turb:.1f} NTU) is outside training range (9–119 NTU). Interpret with caution.")
+    else:
+        warn = gr.update(visible=False, value="")
 
     return round(turb, 2), round(ssc, 2), warn
 
@@ -134,7 +135,7 @@ with gr.Blocks(title="SSC Estimator — Mississippi River") as demo:
                 out_turb = gr.Number(label="Predicted Turbidity (NTU)", interactive=False)
                 out_ssc  = gr.Number(label="Predicted SSC (mg/L)",      interactive=False)
 
-            out_warn = gr.Textbox(label="", interactive=False, visible=True)
+            out_warn = gr.Textbox(label="Range Warning", interactive=False, visible=False)
 
             btn.click(run_svr,
                       inputs=[inp_blue, inp_green, inp_red, inp_nir],
